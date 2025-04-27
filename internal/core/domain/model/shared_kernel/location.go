@@ -2,6 +2,7 @@ package shared_kernel
 
 import (
 	"delivery/internal/pkg/errs"
+	"fmt"
 	"math"
 	"math/rand"
 	"time"
@@ -71,7 +72,7 @@ func (l Location) GetY() int {
 }
 
 // CreateRandomLocation creates a new Location instance with random x and y coordinates.
-func CreateRandomLocation() (Location, error) {
+func CreateRandomLocation() Location {
 	// Create a new random source
 	scr := rand.NewSource(time.Now().UnixNano())
 	rnd := rand.New(scr)
@@ -79,11 +80,16 @@ func CreateRandomLocation() (Location, error) {
 	x := rnd.Intn(maxCoordinate) + 1
 	y := rnd.Intn(maxCoordinate) + 1
 
-	return NewLocation(x, y)
+	location, err := NewLocation(x, y)
+	if err != nil {
+		panic(fmt.Sprintf("failed to create random location: x=%d, y=%d, error=%v", x, y, err))
+	}
+
+	return location
 }
 
-// EqualsLocation checks if two Locations are equivalent.
-func (l Location) EqualsLocation(otherLocation Location) bool {
+// Equals checks if two Locations are equivalent.
+func (l Location) Equals(otherLocation Location) bool {
 	return l == otherLocation
 }
 
