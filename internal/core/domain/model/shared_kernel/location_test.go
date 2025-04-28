@@ -56,8 +56,8 @@ func TestReturnValidRandomLocation(t *testing.T) {
 	t.Parallel()
 
 	for i := 0; i < 100; i++ {
-		location, err := CreateRandomLocation()
-		assert.NoError(t, err)
+		location := CreateRandomLocation()
+
 		assert.False(t, location.IsEmpty())
 		assert.GreaterOrEqual(t, location.GetX(), minCoordinate)
 		assert.LessOrEqual(t, location.GetX(), maxCoordinate)
@@ -75,7 +75,7 @@ func TestEqualsLocation(t *testing.T) {
 	location2, err := NewLocation(1, 1)
 	assert.NoError(t, err)
 
-	assert.True(t, location1.EqualsLocation(location2))
+	assert.True(t, location1.Equals(location2))
 }
 
 // TestIsEmptyLocation tests the IsEmpty method of a Location instance.
