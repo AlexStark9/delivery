@@ -14,8 +14,8 @@ func TestCreateValidStoragePlace(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.NotEmpty(t, sp)
-	assert.Equal(t, "Test Place", sp.GetName())
-	assert.Equal(t, 100, sp.GetTotalVolume())
+	assert.Equal(t, "Test Place", sp.Name())
+	assert.Equal(t, 100, sp.TotalVolume())
 }
 
 // TestCreateInvalidStoragePlace tests the creation of an invalid StoragePlace instance.
@@ -63,7 +63,7 @@ func TestAvailableVolumeValid(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Test case for valid volume
-	available, err := sp.AvailableVolume(50)
+	available, err := sp.CanCurrentlyStore(50)
 	assert.NoError(t, err)
 	assert.True(t, available)
 }
@@ -75,7 +75,7 @@ func TestAvailableVolumeReturnError(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Test case for volume exceeding total volume
-	available, err := sp.AvailableVolume(150)
+	available, err := sp.CanCurrentlyStore(150)
 	assert.NoError(t, err)
 	assert.False(t, available)
 }
@@ -87,12 +87,12 @@ func TestAvailableVolumeInvalidValue(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Test case for invalid volume
-	available, err := sp.AvailableVolume(0)
+	available, err := sp.CanCurrentlyStore(0)
 	assert.Error(t, err)
 	assert.False(t, available)
 }
 
-// TestStorageOrderWithInvalidVolume tests the storage order with invalid volume.
+// TestStorageOrderWithInvalidVolume tests the storage orderID with invalid volume.
 func TestStorageOrderWithInvalidVolume(t *testing.T) {
 	t.Parallel()
 
@@ -104,7 +104,7 @@ func TestStorageOrderWithInvalidVolume(t *testing.T) {
 	assert.Error(t, err)
 }
 
-// TestStoreOrderFailed tests the storage order with failed conditions.
+// TestStoreOrderFailed tests the storage orderID with failed conditions.
 func TestStoreOrderFailed(t *testing.T) {
 	t.Parallel()
 
@@ -113,28 +113,28 @@ func TestStoreOrderFailed(t *testing.T) {
 	err = sp.StoreOrder(uuid.New(), 100)
 	assert.NoError(t, err)
 
-	// Test case for storing order with empty order ID
+	// Test case for storing orderID with empty orderID ID
 	err = sp.StoreOrder(uuid.New(), 50)
 	assert.Error(t, err)
 }
 
-// TestRemoveOrder tests the removal of an order from the StoragePlace.
+// TestRemoveOrder tests the removal of an orderID from the StoragePlace.
 func TestRemoveOrder(t *testing.T) {
 	t.Parallel()
 
 	sp, err := NewStoragePlace("Test Place", 100)
 	assert.NoError(t, err)
-	// Store an order
+	// Store an orderID
 	orderID := uuid.New()
 	err = sp.StoreOrder(orderID, 50)
 	assert.NoError(t, err)
-	// Remove the order
+	// Remove the orderID
 	err = sp.RemoveOrder(orderID)
 	assert.NoError(t, err)
-	assert.Nil(t, sp.GetOrderID())
+	assert.Nil(t, sp.OrderID())
 }
 
-// TestRemoveOrderWithInvalidID tests the removal of an order with an invalid ID.
+// TestRemoveOrderWithInvalidID tests the removal of an orderID with an invalid ID.
 func TestRemoveOrderWithInvalidID(t *testing.T) {
 	t.Parallel()
 
@@ -143,19 +143,19 @@ func TestRemoveOrderWithInvalidID(t *testing.T) {
 	err = sp.StoreOrder(uuid.New(), 100)
 	assert.NoError(t, err)
 
-	// Test case for removing order with invalid ID
+	// Test case for removing orderID with invalid ID
 	err = sp.RemoveOrder(uuid.New())
 	assert.Error(t, err)
 }
 
-// TestRemoveOrderWithEmptyID tests the removal of an order with an empty ID.
+// TestRemoveOrderWithEmptyID tests the removal of an orderID with an empty ID.
 func TestRemoveOrderWithEmptyID(t *testing.T) {
 	t.Parallel()
 
 	sp, err := NewStoragePlace("Test Place", 100)
 	assert.NoError(t, err)
 
-	// Test case for removing order with empty ID
+	// Test case for removing orderID with empty ID
 	err = sp.RemoveOrder(uuid.Nil)
 	assert.Error(t, err)
 }
